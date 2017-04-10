@@ -1,6 +1,84 @@
 classdef MapNested < containers.Map & handle
+    % A nested map container
+    %
+    % A MapNested object implements nested maps (map of maps).
+    %
+    % MapN is a handle class.
+    %
+    % Description - basic outline
+    % ---------------------------
+    %
+    % A MapNested object is constructed like this:
+    %
+    %   M = MapNested();
+    %
+    % Values are stored using M(key1, key2, ...) = value, for example:
+    %
+    %   M(1, 'a')     = 'a string value';
+    %   M(1, 'b')     = 287.2;
+    %   M(2)          = [1 2 3; 4 5 6]; 
+    %   M(2, 'x', pi) = {'a' 'cell' 'array'};
+    % 
+    % another possibility is to define the keys as cell-array like:
+    %   M({key1, key2, key3}) = value;
+    % 
+    %
+    % Values are retrieved using M(key1, key2, ...), for example
+    %
+    %   v = M(1, 'b');
+    %   u = M(2);
+    %
+    % or with using cell-arrays for the keys
+    %   v = M({key1, key2, key3});
+    %
+    % Set and get - methods
+    % -----------------------------
+    %
+    % for setting and retrieving values there are also two methods
+    % implemented, for setting a value:
+    %
+    %   MapObj = setValueNested(MapObj, {key1, key2, key3, ...}, value);
+    %
+    %   here the second input parameter has to be a cell-array with the
+    %   keys.
+    %
+    % For retrieving values one can use:
+    %   value = getValueNested(MapObj, {key1, key2, key3,...});
+    %
+    %   here the second input parameter has to be a cell-array with the
+    %   keys.
+    %
+    %
+    % Updating and removing entries
+    % -----------------------------
+    %
+    % The value for a given key list is updated using the usual assignment;
+    % the previous value is overwritten.
+    %
+    %   M(pi, 'x') = 1;     % 1 is current value
+    %   M(pi, 'x') = 2;     % 2 replaces 1 as the value for this key list
+    %
+    %
+    % Method call syntax
+    % ------------------
+    %
+    % Methods of MapNested must be called using the syntax func(MapNobj, ...),
+    % not MapNobj.func(...).
+    %
+    % Methods and properties
+    % ----------------------
+    %
+    % MapN methods:
+    %   MapNested        - constructor for MapNested objects
+    %   subsref     - implements value = Mobj(keylist)
+    %   subsasgn    - implements M(keylist) = value
+    %   setValueNested  - implements Mobj = setValueNested(Mobj, keyList,
+    %   value)
+    %   getValueNested  - implements value = getValueNested(Mobj, keyList);
+    %
+    % See also: containers.Map   
     
-    %(c) Roland Ritt 
+    %(c) Roland Ritt, 04.2017 
     methods
         
         function obj = MapNested(varargin)
@@ -56,7 +134,6 @@ classdef MapNested < containers.Map & handle
             
             if ~obj.isKey(keyList{1})
                 error(['key ''', keyList{1}, ''' is not a key'] );
-                return
             end
             if length(keyList)==1
                 value = values(obj, {keyList{1}});
