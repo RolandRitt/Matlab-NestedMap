@@ -81,7 +81,7 @@ classdef MapNested < containers.Map & handle
     %
     % See also: containers.Map   
     
-    %(c) Roland Ritt, 04.2017 
+    % (c) 2017, Roland Ritt
     methods
         function obj = MapNested(varargin)
             % constructor, calls Superclass-constructor with varargin;
