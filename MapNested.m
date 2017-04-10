@@ -7,7 +7,7 @@ classdef MapNested < containers.Map & handle
             obj = obj@containers.Map(varargin{:}); 
         end
         
-        function obj = setValue1(obj, keyList, value)
+        function obj = setValueNested(obj, keyList, value)
             
             if ~iscell(keyList)
                 error('first input is no cellArray');
@@ -48,7 +48,7 @@ classdef MapNested < containers.Map & handle
             
         end
         
-        function value = getValue1(obj, keyList)
+        function value = getValueNested(obj, keyList)
             
             if ~iscell(keyList)
                 error('first input is no cellArray');
