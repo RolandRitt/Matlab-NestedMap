@@ -1,4 +1,6 @@
 classdef MapNested < containers.Map & handle
+    
+    %(c) Roland Ritt 
     methods
         
         function obj = MapNested(varargin)
