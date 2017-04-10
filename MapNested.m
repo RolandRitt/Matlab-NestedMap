@@ -1,9 +1,12 @@
 classdef MapNested < containers.Map & handle
+    
     % A nested map container
     %
     % A MapNested object implements nested maps (map of maps).
     %
     % MapN is a handle class.
+    % Since MapNested is a subclass from containers.Map, all functions from
+    % containers.Map will be inherited (eg. keys, values, ...)
     %
     % Description - basic outline
     % ---------------------------
@@ -80,45 +83,70 @@ classdef MapNested < containers.Map & handle
     
     %(c) Roland Ritt, 04.2017 
     methods
-        
         function obj = MapNested(varargin)
+            % constructor, calls Superclass-constructor with varargin;
             obj = obj@containers.Map(varargin{:}); 
         end
         
         function obj = setValueNested(obj, keyList, value)
-            
+            % method which recursively constructs a map of maps and add
+            % a a value at the specified keys
+            %
+            % Implements the syntax
+            %
+            %   MapNestedObj = setValueNested(MapNestedObj, keyList,
+            %   value);
+            %       (keyList is of type 'CellArray')
+            %
+            % See also: MapNested, MapNested/setValueNested
             if ~iscell(keyList)
-                error('first input is no cellArray');
+                %check if the keyList is a cell array
+                error('second input (keylist) is no cellArray');
             end
             
             KeyType = class(keyList{1});
+            %find the class-type of first key
             if length(keyList)==1
-                
+                % check if the object is defined
                 if isempty(obj)
+                    %if the object does not exist...
                     obj = MapNested('KeyType', KeyType,'ValueType', 'any');
+                    % generate a new MapNested-object with the specified
+                    % key-Type, and default ValueType set to 'any'
                     obj = [obj;MapNested(keyList{1},value)];
+                    % concatenate the two objects
                 else
+                    %if the object exists, concatenate to add the new value
                     obj = [obj; MapNested(keyList{1}, value)];
                 end
                 return
             else
-                
+                % if more than one key
                 if obj.isKey(keyList{1})
+                    % check if the key is in the map
                     temp = values(obj, keyList(1));
                     temp = temp{1};
+                    % retrieve the MapNested-object from the map
                     if ~isa(temp ,'containers.Map')
+                        % if the value is not a MapObject, generate a new
+                        % one
                         temp = MapNested('KeyType', KeyType,'ValueType', 'any');
                     end
                     
                 else
+                    % if the key does not exist, generate a new
+                    % MapNested-object
                     temp = MapNested('KeyType', KeyType,'ValueType', 'any');
                     
                 end
-                temp = setValue1(temp, keyList(2:end), value);
+                temp = setValueNested(temp, keyList(2:end), value);
+                % set the value in the MapNested-object (recursive call)
                 
                 if isempty(obj)
+                    %if obj is empty, generate a new MapNested-object
                     obj = MapNested(keyList{1}, temp);
                 else
+                    %if obj exists, concatenate the new entry
                     obj = [obj;MapNested(keyList{1}, temp)];
                 end
                 
@@ -127,28 +155,45 @@ classdef MapNested < containers.Map & handle
         end
         
         function value = getValueNested(obj, keyList)
-            
+            % method for retrieving values from a MapNested object by
+            % recursively calls to this method
+            %
+            % Implements the syntax
+            %
+            %   value = getValueNested(MapNestedObj, keyList, value);
+            %       (keyList is of type 'CellArray')
+            %
+            % See also: MapNested, MapNested/setValueNested
             if ~iscell(keyList)
-                error('first input is no cellArray');
+                %check if the keyList is a cellArray
+                error('second input is no cellArray');
             end
             
             if ~obj.isKey(keyList{1})
+                %check if the first key is in the list, if not, throw an
+                %error (maybe should be changed to empty object)
                 error(['key ''', keyList{1}, ''' is not a key'] );
             end
             if length(keyList)==1
+                % if the keyList is only of length 1, return the value of
+                % this list
                 value = values(obj, {keyList{1}});
-                value=value{1};
+                % call the method from the superclass
+                value=value{1}; %retrieve the value
                 return
             else
-                
+                % if there are more than one keys Left in the keyList
                 temp = values(obj, {keyList{1}});
+                % retrieve the MapNested object (key1)
                 temp = temp{1};
                 if ~isa(temp ,'containers.Map')
+                    % if the retrieved value is not a Map, the
+                    % MapNested object was misused --> throw error message
                     error(['key ''', keyList{2}, ''' is not a key'] );
                 end
-                value = getValue1(temp, keyList(2:end));
-                
-                
+                value = getValueNested(temp, keyList(2:end));
+                % recursively call the getValueNested method.
+
                 
             end
             
@@ -161,7 +206,7 @@ classdef MapNested < containers.Map & handle
             %
             %   value = MapNobj(key1, key2, ...)
             %
-            % See also: MapN, MapN/subsasgn, MapN/values
+            % See also: MapNested, MapNested/subsasgn
             
             if ~isscalar(S) || ~strcmp(S.type, '()') || length(S)<1
                 error('MapNested:Subsref:LimitedIndexing', ...
@@ -177,7 +222,7 @@ classdef MapNested < containers.Map & handle
                 else
                     temp = S.subs;
                 end
-                v = getValue1(M, temp);
+                v = getValueNested(M, temp);
             catch me
                 % default is handled in subsrefError for efficiency
                 error('MapNested:Subsref:IndexingError', ...
@@ -193,7 +238,7 @@ classdef MapNested < containers.Map & handle
             %
             %   MapNobj(key1, key2, ...) = value
             %
-            % See also: MapN, MapN/subsasgn, MapN/values
+            % See also: MapNested, MapNested/subsasgn
             
             if ~isscalar(S) || ~strcmp(S.type, '()') || length(S)<1
                 error('MapNested:Subsasgn:LimitedIndexing', ...
@@ -209,7 +254,7 @@ classdef MapNested < containers.Map & handle
                 else
                     temp = S.subs;
                 end
-                M = setValue1(M, temp, v);
+                M = setValueNested(M, temp, v);
             catch me
                 % default is handled in subsrefError for efficiency
                 error('MapNested:Subsasgn:IndexingError', ...
