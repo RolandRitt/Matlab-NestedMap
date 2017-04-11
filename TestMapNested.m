@@ -98,4 +98,10 @@ M = MapNested();
 M(1, 'a')     = 'a string value';
 M(1, 'b')     = 287.2;
 M(2)          = [1 2 3; 4 5 6];
-M(2, 'x', pi) = {'a' 'cell' 'array'};
+try
+    M(2, 'x', pi) = {'a' 'cell' 'array'};
+catch ME
+    if ~isequal(ME.message, 'Something went wrong in indexing')
+        error('Test assign cell array went wrong');
+    end
+end
