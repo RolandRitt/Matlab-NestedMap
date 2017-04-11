@@ -19,12 +19,14 @@ classdef MapNested < containers.Map & handle
     %
     %   M(1, 'a')     = 'a string value';
     %   M(1, 'b')     = 287.2;
-    %   M(2)          = [1 2 3; 4 5 6]; 
-    %   M(2, 'x', pi) = {'a' 'cell' 'array'};
-    % 
+    %   M(2)          = [1 2 3; 4 5 6];
+    %
+    % Attention: you can not assign cell-arrays in this implementation:
+    %   M(2, 'x', pi) = {'a' 'cell' 'array'}; %throws error
+    %
     % another possibility is to define the keys as cell-array like:
     %   M({key1, key2, key3}) = value;
-    % 
+    %
     %
     % Values are retrieved using M(key1, key2, ...), for example
     %
@@ -79,13 +81,15 @@ classdef MapNested < containers.Map & handle
     %   value)
     %   getValueNested  - implements value = getValueNested(Mobj, keyList);
     %
-    % See also: containers.Map   
+    % See also: containers.Map
     
     % (c) 2017, Roland Ritt
     methods
         function obj = MapNested(varargin)
             % constructor, calls Superclass-constructor with varargin;
-            obj = obj@containers.Map(varargin{:}); 
+                        obj = obj@containers.Map(varargin{:});
+            
+
         end
         
         function obj = setValueNested(obj, keyList, value)
@@ -193,7 +197,7 @@ classdef MapNested < containers.Map & handle
                 end
                 value = getValueNested(temp, keyList(2:end));
                 % recursively call the getValueNested method.
-
+                
                 
             end
             
