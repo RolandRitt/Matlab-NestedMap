@@ -31,7 +31,7 @@ Call superclass Methods (see containers.Map: eg isKey, keys, length, remove, siz
 
 Retrieve properties (see containers.Map: eg. Count, KeyType, ValueType):
 
-    NMapobj.propertie
+    NMapobj.property
 
 
 This function is a subclass from Matlabs 'containers.map'-class:
