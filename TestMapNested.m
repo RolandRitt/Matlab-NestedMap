@@ -105,3 +105,18 @@ catch ME
         error('Test assign cell array went wrong');
     end
 end
+
+try
+    M('s') = 4;
+catch ME
+    if ~isequal(ME.message, 'Something went wrong in indexing')
+        error('Test assign cell array went wrong');
+    end
+end
+
+if ~isequal(M.keys, {1,2})
+    error('Test ''.''-assignment went wrong');
+end
+if ~isequal(M.values{2} , [1 2 3; 4 5 6])
+    error('Test ''.''-assignment went wrong');
+end
