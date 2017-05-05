@@ -1,7 +1,8 @@
 # Matlab-NestedMap
 
 Matlab implementation for nested maps (map of maps). This class implements easy set and get access for multible keys. The syntax is the following: 
-Generate a new MapNested object: 
+Generate a new MapNested object:
+
     NMapobj = MapNested(); %generate a new object
 
 Write values to the Map (2 possibilites):
@@ -25,9 +26,11 @@ Retrieve values from the Map (2 possibilites):
     value2 = getValueNested(NMapobj ,{key1, key2, key4}); %returns '5'
 
 Call superclass Methods (see containers.Map: eg isKey, keys, length, remove, size, values):
+
     NMapobj.superclassMethod()
 
 Retrieve properties (see containers.Map: eg. Count, KeyType, ValueType):
+
     NMapobj.propertie
 
 
