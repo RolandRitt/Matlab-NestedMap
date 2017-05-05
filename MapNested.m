@@ -87,9 +87,9 @@ classdef MapNested < containers.Map & handle
     methods
         function obj = MapNested(varargin)
             % constructor, calls Superclass-constructor with varargin;
-                        obj = obj@containers.Map(varargin{:});
+            obj = obj@containers.Map(varargin{:});
             
-
+            
         end
         
         function obj = setValueNested(obj, keyList, value)
@@ -212,26 +212,43 @@ classdef MapNested < containers.Map & handle
             %
             % See also: MapNested, MapNested/subsasgn
             
-            if ~isscalar(S) || ~strcmp(S.type, '()') || length(S)<1
-                error('MapNested:Subsref:LimitedIndexing', ...
-                    'Only ''()'' indexing is supported by a MapNested');
+            switch S(1).type
+                case '.'
+                    v = builtin('subsref',M,S);
+                    
+                case '()'
+                    %                     if ~isscalar(S) || ~strcmp(S.type, '()') || length(S)<1
+                    %                         error('MapNested:Subsref:LimitedIndexing', ...
+                    %                             'Only ''()'' indexing is supported by a MapNested');
+                    %                     end
+                    
+                    try
+                        
+                        if iscell(S(1).subs{1})
+                            temp = S(1).subs{1};
+                        else
+                            temp = S(1).subs;
+                        end
+                        v = getValueNested(M, temp);
+                    catch me
+                        % default is handled in subsrefError for efficiency
+                        error('MapNested:Subsref:IndexingError', ...
+                            'Something went wrong in indexing');
+                    end
+                    
+                    if length(S)>1
+                        v = subsref(v, S(2:end));
+                    end
+                    
+                    
+                case '{}'
+                    error('MapNested:Subsasgn:LimitedIndexing', ...
+                        '''{}'' indexing is not supported by a MapNested');
+                otherwise
+                    error('Not a valid indexing expression')
             end
             
             
-            
-            try
-                
-                if iscell(S.subs{1})
-                    temp = S.subs{1};
-                else
-                    temp = S.subs;
-                end
-                v = getValueNested(M, temp);
-            catch me
-                % default is handled in subsrefError for efficiency
-                error('MapNested:Subsref:IndexingError', ...
-                    'Something went wrong in indexing');
-            end
         end
         
         
