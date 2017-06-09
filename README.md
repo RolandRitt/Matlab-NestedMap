@@ -25,11 +25,16 @@ Retrieve values from the Map (2 possibilites):
     value2 = getValueNested(NMapobj ,{key1, key2, key4}); %returns '5'
 
 Call superclass Methods (see containers.Map: eg isKey, keys, length, remove, size, values):
+
     NMapobj.superclassMethod()
 
 Retrieve properties (see containers.Map: eg. Count, KeyType, ValueType):
-    NMapobj.propertie
 
+    NMapobj.properties
+
+remove entries
+    NMapobj('key') = [];
+    remove(NMapobj, 'key');
 
 This function is a subclass from Matlabs 'containers.map'-class:
 

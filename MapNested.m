@@ -117,12 +117,15 @@ classdef MapNested < containers.Map & handle
                     obj = MapNested('KeyType', KeyType,'ValueType', 'any');
                     % generate a new MapNested-object with the specified
                     % key-Type, and default ValueType set to 'any'
-                    obj = [obj;MapNested(keyList{1},value)];
-                    % concatenate the two objects
-                else
-                    %if the object exists, concatenate to add the new value
-                    obj = [obj; MapNested(keyList{1}, value)];
+                    
                 end
+                
+                if isempty(value)
+                    remove(obj, keyList{1});
+                else
+                obj = [obj;MapNested(keyList{1},value)];
+                end
+                
                 return
             else
                 % if more than one key

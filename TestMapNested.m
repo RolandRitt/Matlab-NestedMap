@@ -90,6 +90,19 @@ catch
     error('Test ''values'' function went wrong');
 end
 
+% test remove Key
+testMap('C') = [];
+
+if ~isequal(keys(testMap),{'A', 'ad'})
+    error('Test remove when assigning an empty array went wrong');
+end
+
+remove(testMap, 'A')
+
+if ~isequal(keys(testMap),{ 'ad'})
+    error('Test remove when use remove function went wrong');
+end
+
 
 
 M = MapNested();
@@ -106,6 +119,8 @@ catch ME
     end
 end
 
+
+
 try
     M('s') = 4;
 catch ME
@@ -113,6 +128,8 @@ catch ME
         error('Test assign cell array went wrong');
     end
 end
+
+
 
 if ~isequal(M.keys, {1,2})
     error('Test ''.''-assignment went wrong');
