@@ -1,7 +1,8 @@
 # Matlab-NestedMap
 
 Matlab implementation for nested maps (map of maps). This class implements easy set and get access for multible keys. The syntax is the following: 
-Generate a new MapNested object: 
+Generate a new MapNested object:
+
     NMapobj = MapNested(); %generate a new object
 
 Write values to the Map (2 possibilites):
@@ -30,11 +31,11 @@ Call superclass Methods (see containers.Map: eg isKey, keys, length, remove, siz
 
 Retrieve properties (see containers.Map: eg. Count, KeyType, ValueType):
 
-    NMapobj.properties
+    NMapobj.property
 
-remove entries
-    NMapobj('key') = [];
-    remove(NMapobj, 'key');
+Delete Entries:
+    NMapobj('Key') = [];
+    remove(NMapobj, 'Key');
 
 This function is a subclass from Matlabs 'containers.map'-class:
 
