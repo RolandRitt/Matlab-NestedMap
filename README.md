@@ -34,6 +34,7 @@ Retrieve properties (see containers.Map: eg. Count, KeyType, ValueType):
     NMapobj.property
 
 Delete Entries:
+    
     NMapobj('Key') = [];
     remove(NMapobj, 'Key');
 
