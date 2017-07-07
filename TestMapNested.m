@@ -43,6 +43,23 @@ if (testMap({'C', 'd', 1, 'v'}) ~= 'servus')
 end
 
 
+if ~isKey(testMap, {'C', 'd'})
+    error('test is Key');
+end
+
+
+if isKey(testMap, {'C', 'f'})
+    error('test is Key');
+end
+
+if isKey(testMap, {'C', 'f', 'g', 'h'})
+    error('test is Key');
+end
+
+if isKey(testMap, {'E', 'f', 'g', 'h'})
+    error('test is Key');
+end
+
 
 testMap = setValueNested(testMap, {'ad', 'c'}, 7);
 testMap = setValueNested(testMap, {'ad', 'e'}, 8);
@@ -58,6 +75,8 @@ end
 % override value ('A' = 5, with a map)
 testMap = setValueNested(testMap, {'A', 'x'}, 10);
 
+
+keys(testMap)
 
 
 if getValueNested(testMap, {'A', 'x'}) ~= 10

@@ -63,12 +63,16 @@ classdef MapNested < containers.Map & handle
     %   M(pi, 'x') = 1;     % 1 is current value
     %   M(pi, 'x') = 2;     % 2 replaces 1 as the value for this key list
     %
+    %   NMapobj('Key') = []; %removes the key
+    %   remove(NMapobj, 'Key'); %also removes the key
     %
-    % Method call syntax
-    % ------------------
+    % check if is a specific key in the map
+    % -------------------------------------
+    %   M.isKey(keyList) %keyList is a cell array of the nested keys
+    %   M.isKey(Key1, Key2, Key3,..) %Key1, Key2, Key3 are the nested keys
+    %   isKey(M, keyList) %keyList is a cell array of the nested keys
+    %   isKey(M, Key1, Key2, Key3,..) %Key1, Key2, Key3 are the nested keys
     %
-    % Methods of MapNested must be called using the syntax func(MapNobj, ...),
-    % not MapNobj.func(...).
     %
     % Methods and properties
     % ----------------------
@@ -80,6 +84,7 @@ classdef MapNested < containers.Map & handle
     %   setValueNested  - implements Mobj = setValueNested(Mobj, keyList,
     %   value)
     %   getValueNested  - implements value = getValueNested(Mobj, keyList);
+    %   isKey - implements Mobj.iskey(keyList);
     %
     % See also: containers.Map
     
@@ -236,7 +241,7 @@ classdef MapNested < containers.Map & handle
                     catch me
                         % default is handled in subsrefError for efficiency
                         error('MapNested:Subsref:IndexingError', ...
-                            'Something went wrong in indexing');
+                            ['Something went wrong in indexing: ',me(1).message] );
                     end
                     
                     if length(S)>1
@@ -284,6 +289,41 @@ classdef MapNested < containers.Map & handle
                 error('MapNested:Subsasgn:IndexingError', ...
                     'Something went wrong in indexing');
             end
+        end
+        
+        function bisKey = isKey(M, varargin)
+            
+            %% test
+            
+            if length(varargin)==1
+                keyList = varargin{1};
+            else
+                keyList = varargin;
+            end
+            
+            if iscell(keyList)
+                if length(keyList)== 1
+                    bisKey = isKey@containers.Map(M,keyList{1});
+                    return
+                else
+                    
+                    KeyTemp = keyList(1);
+                    if M.isKey(KeyTemp)
+                        Mtemp = M.getValueNested(KeyTemp);
+                        bisKey = isKey(Mtemp, keyList(2:end));
+                    else
+                        bisKey = false;
+                    end
+                    return;
+                end
+                
+            else
+                bisKey = isKey@containers.Map(M,varargin{1});
+                return;
+            end
+            
+                
+                
         end
         
     end
